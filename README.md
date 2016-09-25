@@ -1,2 +1,2 @@
-# dj-ms-seed
-seed for nodejs microservices architecture
+# dj-logger
+Logger module. wrap winston.
