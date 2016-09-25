@@ -1,0 +1,33 @@
+{
+  "name": "dj-logger",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/benhodeda/dj-logger.git"
+  },
+  "keywords": [
+    "logger",
+    "winston",
+    "davy"
+  ],
+  "author": "Ben Hodeda",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/benhodeda/dj-logger/issues"
+  },
+  "homepage": "https://github.com/benhodeda/dj-logger#readme",
+  "dependencies": {
+    "continuation-local-storage": "^3.2.0",
+    "duration": "^0.2.0",
+    "lodash": "^4.16.1",
+    "moment": "^2.15.1",
+    "node-uuid": "^1.4.7",
+    "winston": "^2.2.0"
+  },
+  "devDependencies": {}
+}
