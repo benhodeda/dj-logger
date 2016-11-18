@@ -27,7 +27,8 @@
     "lodash": "^4.16.1",
     "moment": "^2.15.1",
     "node-uuid": "^1.4.7",
-    "winston": "^2.2.0"
+    "progress-logger-js": "^0.1.0",
+    "winston": "^2.3.0"
   },
   "devDependencies": {}
 }
