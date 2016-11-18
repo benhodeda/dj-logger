@@ -23,7 +23,6 @@
   "homepage": "https://github.com/benhodeda/dj-logger#readme",
   "dependencies": {
     "continuation-local-storage": "^3.2.0",
-    "duration": "^0.2.0",
     "lodash": "^4.16.1",
     "moment": "^2.15.1",
     "node-uuid": "^1.4.7",
