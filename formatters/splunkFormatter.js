@@ -8,7 +8,7 @@ module.exports = class SplunkFormatter extends Formatter {
         let logString = `timestamp="${moment().format("x")}" severity="${log.level.toUpperCase()}" action="${log.message}"`;
 
         if (log.meta instanceof Error) {
-            logString += ` innerException="${exception.message}"`
+            logString += ` innerException="${log.meta.message}"`
         }
 
         _.forOwn(log.meta, function (value, key) {
@@ -19,7 +19,7 @@ module.exports = class SplunkFormatter extends Formatter {
         });
 
         if (log.meta instanceof Error) {
-            logString += ` stacktrace="${exception.stack.split('\n').join('\r\n')}"`
+            logString += ` stacktrace="${log.meta.stack.split('\n').join('\r\n')}"`
         }
 
         return logString;

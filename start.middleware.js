@@ -10,8 +10,8 @@ function startTransaction(logger, system, scope, callback) {
         session.run(function () {
             logger.initTransaction();
             logger.sets({
-                system: system,
-                scope: scope,
+                system,
+                scope,
                 section: "undefined",
                 user: req.headers.user || "undefined",
                 requestUrl: req.url
