@@ -1,6 +1,6 @@
 const Logger = require('./../logger');
 
-let loggers = {};
+const loggers = {};
 
 module.exports = class LoggerFactory {
     static get(name, config) {

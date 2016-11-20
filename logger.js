@@ -1,35 +1,30 @@
-const FormatterFactory = require('./factories/formatter.factory.js');
-const TransportFactory = require('./factories/transport.factory.js');
-const defaults = require('./configuration/defaults.config');
+const _ = require('lodash');
+const winston = require('winston');
 const ProgressLogger = require('progress-logger-js');
-const Measurements = require('./measurements');
+
 const Parameters = require('./parameters');
-let winston = require('winston');
-let _ = require('lodash');
+const Measurements = require('./measurements');
+const defaults = require('./configuration/defaults.config');
+const TransportFactory = require('./factories/transport.factory.js');
+const FormatterFactory = require('./factories/formatter.factory.js');
 
-var transports;
-var formatters;
-
-var measurement;
-var parameters;
+let transports;
+let formatters;
+let measurement;
+let parameters;
 
 class Logger {
     constructor(name, config) {
-        transports = new TransportFactory();
-        formatters = new FormatterFactory();
-        measurement = new Measurements();
         parameters = new Parameters();
+        measurement = new Measurements();
+        formatters = new FormatterFactory();
+        transports = new TransportFactory();
 
         this.name = name;
         winston.clear();
-        _.forOwn(config, function (transportConfig, transport) {
-            const Transport = transports.get(transport, transportConfig.module);
-            let options = Object.assign({}, defaults, transportConfig);
-            if (transportConfig.formatter) {
-                const Formatter = formatters.get(transportConfig.formatter);
-                let formatter = new Formatter(parameters);
-                options.formatter = formatter.format;
-            }
+        _.forOwn(config, (transportConfig, transport) => {
+            let Transport = transports.get(transport, transportConfig.module);
+            let options = initTransportOptions(transportConfig);
             winston.add(Transport, options);
         });
     }
@@ -53,7 +48,7 @@ class Logger {
         const stats = progress.stats();
         measurement.add(name, stats.elapsed);
 
-        if (immediateLog) winston.info(`Operation finished. Measurement result ${name}Time=${stats.elapsed}`);
+        if (immediateLog) { winston.info(`Operation finished. Measurement result ${name}Time=${stats.elapsed}`); }
     }
 
     logMeasurements(msg) {
@@ -70,5 +65,15 @@ class Logger {
 }
 
 Object.setPrototypeOf(Logger.prototype, winston);
+
+function initTransportOptions(config) {
+    let options = Object.assign({}, defaults, config);
+    if (config.formatter) {
+        const Formatter = formatters.get(config.formatter);
+        let formatter = new Formatter(parameters);
+        options.formatter = formatter.format;
+    }
+    return options;
+}
 
 module.exports = Logger;
