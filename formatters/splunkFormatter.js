@@ -1,6 +1,7 @@
-const Formatter = require('./formatter.js');
-const moment = require('moment');
 const _ = require('lodash');
+const moment = require('moment');
+
+const Formatter = require('./formatter.js');
 
 module.exports = class SplunkFormatter extends Formatter {
     format(log) {
