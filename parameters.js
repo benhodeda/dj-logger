@@ -4,7 +4,7 @@ const uuid = require('node-uuid');
 const session = cls.getNamespace('dj-logger');
 
 const sessionKey = 'logger-params';
-const tidKey = 'logger-params';
+const tidKey = 'tid';
 
 module.exports = class Parameters {
     setTransactionId(tid) {
