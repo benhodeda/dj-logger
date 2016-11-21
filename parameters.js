@@ -4,14 +4,15 @@ const uuid = require('node-uuid');
 const session = cls.getNamespace('dj-logger');
 
 const sessionKey = 'logger-params';
+const tidKey = 'logger-params';
 
 module.exports = class Parameters {
     setTransactionId(tid) {
-        session.set('transactionId', tid || uuid.v4());
+        session.set(tidKey, tid || uuid.v4());
     }
 
     getTransactionId() {
-        session.get('transactionId');
+        return session.active ? session.get(tidKey) : undefined;
     }
 
     set(key, value) {
@@ -27,8 +28,7 @@ module.exports = class Parameters {
     }
 
     get() {
-        if (session.active) return session.get(sessionKey);
-        return {};
+        return session.active ? session.get(sessionKey) : {};
     }
 
     clear() {
