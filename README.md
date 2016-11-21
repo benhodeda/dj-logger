@@ -1,10 +1,9 @@
 # dj-logger
+Transactional logger. Keep it simple to write log about transactions in asynchronous application.    
 
 [![Version npm](https://img.shields.io/npm/v/dj-logger.svg?style=flat-square)](https://www.npmjs.com/package/dj-logger)
 
 [![NPM](https://nodei.co/npm/dj-logger.png?downloads=true&downloadRank=true)](https://nodei.co/npm/dj-logger/)
-
-Transactional logger. Keep it simple to write log about transactions in asynchronous application.    
   
 ##Motivation
 Dj-logger is a logging library for node.js (wrapping Winston library), that helps you write logs with request context.
