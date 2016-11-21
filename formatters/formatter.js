@@ -11,7 +11,8 @@ module.exports = class Formatter {
                 `'format' function should be override in ${name} sub-class`);
         } else {
             let params = loggerParameters.get();
-            Object.assign(log.meta, params);
+            let tid = loggerParameters.getTransactionId();
+            Object.assign(log.meta, params, {transactionId: tid});
         }
     }
 };

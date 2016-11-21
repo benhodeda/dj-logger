@@ -10,6 +10,10 @@ module.exports = class Parameters {
         session.set('transactionId', tid || uuid.v4());
     }
 
+    getTransactionId() {
+        session.get('transactionId');
+    }
+
     set(key, value) {
         let params = session.get(sessionKey);
         params[key] = value;
