@@ -12,7 +12,6 @@ module.exports = class Formatter {
         } else {
             let params = loggerParameters.get();
             Object.assign(log.meta, params);
-            loggerParameters.clear();
         }
     }
 };
