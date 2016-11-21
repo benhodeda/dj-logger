@@ -13,7 +13,7 @@ module.exports = class Measurements {
 
     add(name, measurement) {
         let measurements = session.get(sessionKey);
-        measurements[name] = measurements[name] || initMeasurement;
+        measurements[name] = measurements[name] || _.clone(initMeasurement);
         measurements[name].sum += measurement;
         measurements[name].count++;
         session.set(sessionKey, measurements);
