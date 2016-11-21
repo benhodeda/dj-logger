@@ -1,4 +1,5 @@
 const cls = require('continuation-local-storage');
+
 const session = cls.getNamespace('dj-logger');
 
 module.exports = startTransaction;
@@ -12,7 +13,6 @@ function startTransaction(logger, system, scope, callback) {
             logger.sets({
                 system,
                 scope,
-                section: "undefined",
                 user: req.headers.user || "undefined",
                 requestUrl: req.url
             });

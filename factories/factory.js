@@ -6,7 +6,9 @@ module.exports = class Factory {
 
     get(name, module) {
         name = name.toLowerCase();
-        if (this.config[name]) return this.config[name];
+        if (this.config[name]) {
+            return this.config[name];
+        }
         return require(module);
     }
 };

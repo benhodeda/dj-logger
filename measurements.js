@@ -1,13 +1,12 @@
-const cls = require('continuation-local-storage');
 let _ = require('lodash');
+const cls = require('continuation-local-storage');
 
+const sessionKey = 'logger-measurements';
 const session = cls.getNamespace('dj-logger');
-
 const initMeasurement = {
     sum: 0,
     count: 0
 };
-const sessionKey = 'logger-measurements';
 
 module.exports = class Measurements {
 

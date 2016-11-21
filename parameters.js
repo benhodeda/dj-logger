@@ -1,10 +1,9 @@
-const cls = require('continuation-local-storage');
 const uuid = require('node-uuid');
+const cls = require('continuation-local-storage');
 
-const session = cls.getNamespace('dj-logger');
-
-const sessionKey = 'logger-params';
 const tidKey = 'tid';
+const sessionKey = 'logger-params';
+const session = cls.getNamespace('dj-logger');
 
 module.exports = class Parameters {
     setTransactionId(tid) {
