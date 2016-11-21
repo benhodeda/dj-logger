@@ -8,7 +8,7 @@ function startTransaction(logger, system, scope, callback) {
         session.bindEmitter(req);
         session.bindEmitter(res);
         session.run(function () {
-            logger.initTransaction();
+            logger.initTransaction(req.headers['transaction-id']);
             logger.sets({
                 system,
                 scope,
