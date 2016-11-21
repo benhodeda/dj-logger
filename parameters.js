@@ -28,6 +28,6 @@ module.exports = class Parameters {
     }
 
     clear() {
-        session.set(sessionKey, {});
+        if (session.active) session.set(sessionKey, {});
     }
 };
