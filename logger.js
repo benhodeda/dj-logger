@@ -53,7 +53,8 @@ class Logger {
         const stats = progress.stats();
         measurement.add(name, stats.elapsed);
 
-        if (immediateLog) winston.info(`Operation finished. Measurement result ${name}Time=${stats.elapsed}`);
+        let key = `${name}Time`;
+        if (immediateLog) winston.info("Operation finished.", {key: stats.elapsed});
     }
 
     logMeasurements(msg) {
