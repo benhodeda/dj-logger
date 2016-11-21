@@ -57,6 +57,24 @@ class Logger {
         if (immediateLog) winston.info("Operation finished.", {key: stats.elapsed});
     }
 
+    measurePromise(name, promise, immediateLog = false) {
+        let progress = new ProgressLogger(); //start measure
+
+        return promise.then((result) => {
+            progress.end();//stop measure
+
+            //update measures
+            const stats = progress.stats();
+            measurement.add(name, stats.elapsed);
+
+            let key = `${name}Time`;
+            if (immediateLog) winston.info("Operation finished.", {key: stats.elapsed});
+
+            return result;
+        }); //Act
+
+    }
+
     logMeasurements(msg) {
         let meta = measurement.get();
         measurement.clear();
