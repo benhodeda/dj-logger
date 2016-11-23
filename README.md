@@ -56,8 +56,8 @@ After you have an instance of the logger, you can start writing logs!
 ###Setup Logger Configuration
 
 A logger configuration is a Json object, which its keys is the transport method name and the value is Winston's settings for this transport.
-The current supported transports are File transport (which its key is 'file'), Console transport (which its key is 'console') and custom transport.
-You can use different key for a custom transport and set in its settings 'module' which contains your transport module name.
+The current supported transports are Winston's supported transports (which its key is the transport's name) and custom transport.
+You can use a custom key for a custom transport and set in its settings a 'module' which contains your transport module name.
 
 For example:
 
@@ -80,7 +80,7 @@ For example:
 
 As you can see, the configuration sets a single file transport and sets its settings. The transport's settings are the same as Winston transport's settings, with one exception - the formatter option.
 Winston library gives you a way, through the transport's settings to set a formatter function of your own.
-Dj-logger comes with new approach that gives you a way to inherit from base Formatter class and override the format function.
+Dj-logger comes with new approach that gives you a way to inherit from base Formatter class and override the format function. After calling super.format(log) in your format function, all the transactional parameters will be accessible through `log.meta`.
 For example, assume that I've create a new formatter module and called it MyFormatter, which contains the following code:
 
 ```javascript
@@ -132,23 +132,23 @@ var logger = dj.LoggerFactory.get('logger-name', config);
 
 var app = express();
 
-app.use(dj.startTransaction(logger,'YOUR-SYSYTEM-NAME','SYSTEM-COMPONENT', () => console.log('logger initiated')));
+app.use(dj.startTransaction(logger,'YOUR-SYSYTEM-NAME','SYSTEM-COMPONENT', (req) => logger.setParam("user", req.headers.user)));
 
 //your routes comes here!
 ```
 
-The startTransaction method sets your first transactional parameters and return a middleware the sets any request in its own namespace.
-The startTransaction parameters are: the transactional logger (each transactional logger should be initiate separately), your system name, the name of the system's component (e.g. "App Server", "Users Micro-Service", etc.), a callback that will execute before the call to next() method (optional).
-After executing this middleware, your logs will contain transactionId (generated automatically, or sets by the request's 'transaction-id' header), your system name, your current system component, user (should be in request's 'user' header') and requestUrl.
+The startTransaction method sets your first transactional parameters and returns a middleware that sets any request in its own namespace.
+The startTransaction parameters are: the transactional logger (each transactional logger should be initiate separately), your system name, the name of the system's component (e.g. "App Server", "Users Micro-Service", etc.), a callback that receives the request object and will execute before the call to next() method (optional).
+After executing this middleware, your logs will contain transactionId (generated automatically, or sets by the request's 'transaction-id' header), your system name, your current system component and requestUrl.
  
 ###Set Transactional Parameters
 
 There are two ways to set transactional parameters: single parameter and many parameters at once.
-The Logger expose two methods: `set` and `sets` to handle the above.
+The Logger expose two methods: `setParam` and `setMany` to handle the above.
 
 Examples:
 ```javascript
-logger.set('myParam', 'myValue');
+logger.setParam('myParam', 'myValue');
 ```
 
 The code above sets a transactional parameter called 'myParam' and sets its value to 'myValue'. This parameter will be accessible in your custom formatter and from the (already exists) splunk formatter in every log written in the current request.
@@ -156,7 +156,7 @@ The Splunk formatter will write this parameter in every log in the current reque
 
 Examples:
 ```javascript
-logger.sets({
+logger.setManyParams({
     one: 'First Value',
     two: 'Second Value'
 });
@@ -176,14 +176,14 @@ function f1() {
     //some code...
 }
 
-logger.measure('myMeasure', f1, true);
+let x = logger.measure('myMeasure', f1, "f1 measure");
 //more code...
 logger.logMeasurements('my message');
 ```
 
-The code above will execute and measure the method f1. The first parameter is a name for the measurement, the second parameter is the method to measure and the last parameter (optional) tells the logger to log the measurement right after f1 finished its executing. If the third parameter exists, the measurements will be logged as info with the message "Operation finished." and parameter myMeasureTime=x (x will be the number of milliseconds took to execute f1). 
+The code above will execute and measure the method f1. The first parameter is a name for the measurement, the second parameter is the method or promise to measure and the last parameter (optional) tells the logger to log the measurement right after f1 finished its executing with message "f1 measure". If the third parameter (which is a log message) exists, the measurements will be logged as info with this message and parameter myMeasureTime=x (x will be the number of milliseconds took to execute f1). 
 If the third parameter is absent or set to false, all the measurements of the request will be stored until executing logMeasurements. logMeasurements will write info log with the measures results (all the measures in single log).
-
+When calling measure with function as the second parameter, measure's return value will be the input function's return value.
 
 Assume we have the following code:
 ```javascript
@@ -194,7 +194,7 @@ logger.measure('myMeasure', f1);
 logger.logMeasurements('my message');
 ```
 
-logMeasurements will print an info log with the following details: myMeasureTotalTime (the total time of all the measures called 'myMeasure' in milliseconds), myMeasureCount (the count of measures called 'myMeasure', in this example it will be 4) and myMeasureAvgTime (the average time of all the measures called 'myMeasure' in milliseconds).
+logMeasurements will print an info log with the following details: myMeasureTotalTime (the total time of all the measures called 'myMeasure' in milliseconds), myMeasureCount (the count of measures called 'myMeasure', in this example it will be 4), myMeasureAvgTime (the average time of all the measures called 'myMeasure' in milliseconds), myMeasureMin and myMeasureMax (the minimum and maximum time of all the measures called 'myMeasure' in milliseconds).
 
 
 Measure Promises:
@@ -203,10 +203,10 @@ function f1() {
     //some asyn code that return a promise
 }
 
-logger.measurePromise('myMeasure', f1, true);
+logger.measure('myMeasure', f1, "f1 measure").then((result) => console.log(`f1 result is ${result}`));
 //more code...
 logger.logMeasurements('my message');
 ```
 
-This code executes the same way as function measuring, except measurePromise also return a promise containing f1 result.
+This code executes the same way as function measuring, except when getting a promise as the second parameter, measure's return value is a promise containing f1 result.
 You can do number of promise measures with the same name, it will act the same as number of function measures with the same name.

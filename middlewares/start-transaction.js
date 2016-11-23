@@ -4,20 +4,19 @@ const session = cls.getNamespace('dj-logger');
 
 module.exports = startTransaction;
 
-function startTransaction(logger, system, scope, callback) {
-    return function (req, res, next) {
+function startTransaction(logger, system, scope, transactionIdHeader = 'transaction-id', callback) {
+    return (req, res, next) => {
         session.bindEmitter(req);
         session.bindEmitter(res);
-        session.run(function () {
-            logger.initTransaction(req.headers['transaction-id']);
-            logger.sets({
+        session.run(() => {
+            logger.initTransaction(req.headers[transactionIdHeader]);
+            logger.setMany({
                 system,
                 scope,
-                user: req.headers.user || "undefined",
                 requestUrl: req.url
             });
             if (callback) {
-                callback();
+                callback(req);
             }
             next();
         });

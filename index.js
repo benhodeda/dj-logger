@@ -1,9 +1,9 @@
 require('continuation-local-storage').createNamespace('dj-logger');
 
-const Logger = require('./logger');
+const Logger = require('./models/logger');
 const Formatter = require('./formatters/formatter');
-const startTransaction = require('./start.middleware');
 const LoggerFactory = require('./factories/logger.factory');
+const startTransaction = require('./middlewares/start-transaction.js');
 
 module.exports = {
     Logger,

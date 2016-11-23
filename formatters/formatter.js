@@ -9,7 +9,7 @@ module.exports = class Formatter {
         let name = this.constructor.name;
         if (name === 'Formatter') {
             console.error(`Cannot use base Formatter's format(log) function as logger formatter.
-                'format' function should be override in ${name} sub-class`);
+                'format' function should be override in sub-class`);
         } else {
             let params = loggerParameters.get();
             let tid = loggerParameters.getTransactionId();

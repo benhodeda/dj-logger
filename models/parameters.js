@@ -2,7 +2,7 @@ const uuid = require('node-uuid');
 const cls = require('continuation-local-storage');
 
 const tidKey = 'tid';
-const sessionKey = 'logger-params';
+const paramsKey = 'logger-params';
 const session = cls.getNamespace('dj-logger');
 
 module.exports = class Parameters {
@@ -15,22 +15,22 @@ module.exports = class Parameters {
     }
 
     set(key, value) {
-        let params = session.get(sessionKey);
+        let params = session.get(paramsKey);
         params[key] = value;
-        session.set(sessionKey, params);
+        session.set(paramsKey, params);
     }
 
-    sets(data) {
-        let params = session.get(sessionKey);
-        Object.assign(params, data);
-        session.set(sessionKey, params);
+    setMany(dataDictionary) {
+        let params = session.get(paramsKey);
+        Object.assign(params, dataDictionary);
+        session.set(paramsKey, params);
     }
 
     get() {
-        return session.active ? session.get(sessionKey) : {};
+        return session.active ? session.get(paramsKey) : {};
     }
 
     clear() {
-        if (session.active) session.set(sessionKey, {});
+        if (session.active) session.set(paramsKey, {});
     }
 };
