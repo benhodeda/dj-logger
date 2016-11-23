@@ -1,5 +1,5 @@
 const Factory = require('./factory');
-const formatters = require('../configuration/formatters.config');
+const formatters = require('../formatters/formatter.collection.js');
 
 module.exports = class FormatterFactory extends Factory {
     constructor() {
@@ -7,8 +7,6 @@ module.exports = class FormatterFactory extends Factory {
     }
 
     get(name) {
-        name = name.toLowerCase();
-        if (this.config[name]) return this.config[name];
         return super.get(name, name);
     }
 };
