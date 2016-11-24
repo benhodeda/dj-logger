@@ -49,7 +49,7 @@ module.exports = class Measurements {
 
         //update measures
         const stats = progress.stats();
-        this.add(name, stats.elapsed);
+        add(name, stats.elapsed);
 
         return {
             returnValue,
@@ -67,7 +67,7 @@ module.exports = class Measurements {
 
             //update measures
             const stats = progress.stats();
-            this.add(name, stats.elapsed);
+            add(name, stats.elapsed);
 
             return {
                 promiseResponse: response,

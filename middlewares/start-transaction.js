@@ -10,7 +10,7 @@ function startTransaction(logger, system, scope, transactionIdHeader = 'transact
         session.bindEmitter(res);
         session.run(() => {
             logger.initTransaction(req.headers[transactionIdHeader]);
-            logger.setMany({
+            logger.setManyParams({
                 system,
                 scope,
                 requestUrl: req.url

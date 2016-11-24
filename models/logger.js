@@ -73,7 +73,9 @@ function initTransportOptions(config) {
 function writeMeasurement(name, result, immediateLog) {
     let key = `${name}Time`;
     if (immediateLog) {
-        winston.info(immediateLog, {key: result});
+        let param = {};
+        param[key] = result;
+        winston.info(immediateLog, param);
     }
 }
 
