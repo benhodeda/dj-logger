@@ -1,5 +1,5 @@
-const Formatter = require('formatter');
-const SplunkFormatter = require('splunkFormatter');
+const Formatter = require('./formatter');
+const SplunkFormatter = require('./splunkFormatter');
 
 module.exports = {
     interface: Formatter,
