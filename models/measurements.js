@@ -41,7 +41,7 @@ module.exports = class Measurements {
     }
 
     measure(name, callback) {
-        let progress = new ProgressLogger(); //start measure
+        let progress = new ProgressLogger({logger: _.noop}); //start measure
 
         const returnValue = callback(); //Act
 
@@ -58,7 +58,7 @@ module.exports = class Measurements {
     }
 
     measurePromise(name, promise) {
-        const progress = new ProgressLogger(); //start measure
+        const progress = new ProgressLogger({logger: _.noop}); //start measure
 
         return promise.then(act);
 
