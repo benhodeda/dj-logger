@@ -1,7 +1,7 @@
 module.exports = class Factory {
 
     constructor(collection) {
-        this.collection = collection;
+        this.collection = collection || {};
     }
 
     get(name, module) {

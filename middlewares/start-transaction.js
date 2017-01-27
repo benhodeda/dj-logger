@@ -1,24 +1,28 @@
 const cls = require('continuation-local-storage');
 
-const session = cls.getNamespace('dj-logger');
+const defaultSession = cls.getNamespace('dj-logger');
 
 module.exports = startTransaction;
 
-function startTransaction(logger, system, scope, transactionIdHeader = 'transaction-id', callback) {
+function startTransaction(logger, system, scope, transactionIdHeader = 'transaction-id', callback, session = defaultSession) {
     return (req, res, next) => {
         session.bindEmitter(req);
         session.bindEmitter(res);
         session.run(() => {
-            logger.initTransaction(req.headers[transactionIdHeader]);
-            logger.setManyParams({
-                system,
-                scope,
-                requestUrl: req.url
-            });
+            setupTransaction(logger, req, transactionIdHeader, system, scope);
             if (callback) {
                 callback(req);
             }
             next();
         });
     }
+}
+
+function setupTransaction(logger, req, transactionIdHeader, system, scope) {
+    logger.initTransaction(req.headers[transactionIdHeader]);
+    logger.setManyParams({
+        system,
+        scope,
+        requestUrl: req.url
+    });
 }

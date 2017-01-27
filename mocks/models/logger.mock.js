@@ -1,6 +1,12 @@
+const _ = require('lodash');
+const winston = require('winston');
+
 class MockLogger {
     constructor() {
         this.name = "Mock-Logger";
+        for (let field in winston) {
+            this[field] = _.noop;
+        }
     }
 
     setParam() {

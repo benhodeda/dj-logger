@@ -1,6 +1,6 @@
 {
   "name": "dj-logger",
-  "version": "2.1.6",
+  "version": "3.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -33,5 +33,9 @@
     "progress-logger-js": "^0.1.0",
     "winston": "^2.3.0"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "mocha": "^3.2.0",
+    "sinon": "^1.17.7"
+  }
 }

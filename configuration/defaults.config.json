@@ -1,0 +1,12 @@
+{
+  "level": "debug",
+  "silent": false,
+  "colorize": false,
+  "maxsize": 102400000,
+  "maxFiles": 100,
+  "json": false,
+  "zippedArchive": false,
+  "fsoptions": {
+    "flags": "a"
+  }
+}

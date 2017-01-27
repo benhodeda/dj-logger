@@ -44,10 +44,12 @@ There are several features you would like to be aware of:
 ```javascript
 var dj = require('dj-logger');
 var config = require('./logger.config'); //configuration for the logger
-var logger = dj.LoggerFactory.get('logger-name', config);
+var loggerFactory = new dj.LoggerFactory(config);
+var logger = loggerFactory.get('logger-name', config);
 ```
 
-The LoggerFactory's 'get' method receives logger name (yours to choose) and a configuration for the logger.
+The LoggerFactory initialized with the loggers' configuration and can retrieve logger by its name using the `get` method.
+The second overload of `get` method receives logger name (yours to choose) and a configuration for the logger.
 In case you've already created a logger with this name, the factory will return it (ignoring the new configuration), Otherwise it'll create a new logger and will set its settings according to the configuration object.
 (see [Setup Logger Configuration](#setup-logger-configuration) to understand the configuration of the logger)
 
@@ -55,6 +57,7 @@ After you have an instance of the logger, you can start writing logs!
 
 ###Setup Logger Configuration
 
+Dj-logger configuration is a Json object, which its keys is the different loggers' names and the value of each is the logger configuration.
 A logger configuration is a Json object, which its keys is the transport method name and the value is Winston's settings for this transport.
 The current supported transports are Winston's supported transports (which its key is the transport's name) and custom transport.
 You can use a custom key for a custom transport and set in its settings a 'module' which contains your transport module name.
@@ -63,17 +66,19 @@ For example:
 
 ```javascript
 {
-    file: {
-        formatter: 'splunk',
-        filename: './log.txt',
-        level: "debug",
-        silent: false,
-        colorize: false,
-        maxsize: 100 * 1000 * 1024,
-        maxFiles: 100,
-        json: false,
-        zippedArchive: false,
-        fsoptions: {flags: 'a'}
+    "my-logger": {
+        "file": {
+            "formatter": "splunk",
+            "filename": "./log.txt",
+            "level": "debug",
+            "silent": false,
+            "colorize": false,
+            "maxsize": 100 * 1000 * 1024,
+            "maxFiles": 100,
+            "json": false,
+            "zippedArchive": false,
+            "fsoptions": {flags: "a"}
+        }
     }
 }
 ```

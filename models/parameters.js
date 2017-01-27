@@ -3,34 +3,40 @@ const cls = require('continuation-local-storage');
 
 const tidKey = 'tid';
 const paramsKey = 'logger-params';
-const session = cls.getNamespace('dj-logger');
+const _session = Symbol();
+const _uuid = Symbol();
 
 module.exports = class Parameters {
+    constructor(storage = cls, uuidGenerator = uuid) {
+        this[_session] = storage.getNamespace('dj-logger');
+        this[_uuid] = uuidGenerator;
+    }
+    
     setTransactionId(tid) {
-        session.set(tidKey, tid || uuid.v4());
+        this[_session].set(tidKey, tid || this[_uuid].v4());
     }
 
     getTransactionId() {
-        return session.active ? session.get(tidKey) : undefined;
+        return this[_session].active ? this[_session].get(tidKey) : undefined;
     }
 
     set(key, value) {
-        let params = session.get(paramsKey);
+        let params = this[_session].get(paramsKey);
         params[key] = value;
-        session.set(paramsKey, params);
+        this[_session].set(paramsKey, params);
     }
 
     setMany(dataDictionary) {
-        let params = session.get(paramsKey);
+        let params = this[_session].get(paramsKey);
         Object.assign(params, dataDictionary);
-        session.set(paramsKey, params);
+        this[_session].set(paramsKey, params);
     }
 
     get() {
-        return session.active ? session.get(paramsKey) : {};
+        return this[_session].active ? this[_session].get(paramsKey) : {};
     }
 
     clear() {
-        if (session.active) session.set(paramsKey, {});
+        if (this[_session].active) this[_session].set(paramsKey, {});
     }
 };
