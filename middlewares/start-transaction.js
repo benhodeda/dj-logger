@@ -4,7 +4,7 @@ const defaultSession = cls.getNamespace('dj-logger');
 
 module.exports = startTransaction;
 
-function startTransaction(logger, system, scope, transactionIdHeader = 'transaction-id', callback, session = defaultSession) {
+function startTransaction(logger, system, scope, callback, transactionIdHeader = 'transaction-id', session = defaultSession) {
     return (req, res, next) => {
         session.bindEmitter(req);
         session.bindEmitter(res);
