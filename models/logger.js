@@ -14,14 +14,14 @@ const _parameters = Symbol('parameters');
 
 class Logger {
     constructor(name, config, parameters = new Parameters(), measurements = new Measurements(),
-                formatterFactory = new FormatterFactory(), transportFactory = new TransportFactory()) {
+        formatterFactory = new FormatterFactory(), transportFactory = new TransportFactory()) {
         this[_parameters] = parameters;
         this[_measurements] = measurements;
         this[_formatters] = formatterFactory;
         this[_transports] = transportFactory;
 
         this.name = name;
-        winston.clear();//clear winston's default transports 
+        winston.clear(); //clear winston's default transports
         initTransports.call(this, config);
     }
 
@@ -34,7 +34,7 @@ class Logger {
     }
 
     measure(name, subject, immediateLog) {
-        let measureHandler = typeof(subject) === "function" ? measureFunction : measurePromise;
+        let measureHandler = typeof (subject) === "function" ? measureFunction : measurePromise;
         return measureHandler.call(this, name, subject, immediateLog);
     }
 
@@ -42,6 +42,10 @@ class Logger {
         let meta = this[_measurements].get();
         this[_measurements].clear();
         winston.info(msg, meta);
+    }
+
+    getTransactionId() {
+        return this[_parameters].getTransactionId();
     }
 
     initTransaction(transactionId) {
@@ -81,7 +85,10 @@ function writeMeasurement(name, result, immediateLog) {
 }
 
 function measureFunction(name, callback, immediateLog) {
-    const {returnValue, time} = this[_measurements].measure(name, callback);
+    const {
+        returnValue,
+        time
+    } = this[_measurements].measure(name, callback);
     writeMeasurement(name, time, immediateLog);
     return returnValue;
 }

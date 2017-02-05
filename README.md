@@ -4,7 +4,7 @@ Transactional logger. Keep it simple to write log about transactions in asynchro
 [![Version npm](https://img.shields.io/npm/v/dj-logger.svg?style=flat-square)](https://www.npmjs.com/package/dj-logger)
 
 [![NPM](https://nodei.co/npm/dj-logger.png?downloads=true&downloadRank=true)](https://nodei.co/npm/dj-logger/)
-  
+
 ##Motivation
 Dj-logger is a logging library for node.js (wrapping Winston library), that helps you write logs with request context.
 
@@ -12,14 +12,14 @@ Node.js is a single threaded engine for any internal work. When it comes to exte
 This behavior makes it hard to write logs with fully context of the request in every step of our flow.
 For example, assume you want to set a Guid for a server request, and write it in every log of an asynchronous flow.
  You'll probably set the Guid when the flow starts, save it somewhere in your app and use it every time you write a log.
-    
+
 That way, when your server will get its first request your logs will contain the request Guid you set, all the way of your asynchronous action.
 Now, assume that your server decided to handle a second request while it waiting to this action to finish. It'll set the second request Guid and override the first Guid!
 When the asynchronous action will finish, every time you'll want to use the request id, you'll end up using the second request id!
 
 One way to solve this problem is to give access to the request object (the one you get in your route handler), from any point of your app.
 Most of the time you won't want to do this, because most of your code shouldn't be aware of the request context, especially when you need this information just for logs.
-   
+
 Dj-logger gives you a transparent way to set transactional parameters like request id and write them in any of the request log.
 
 ##Installation
@@ -94,9 +94,9 @@ var Formatter = require('dj-logger').Formatter;
 module.exports = class MyFormatter extends Formatter {
     format(log) {
             super.format(log); //you MUST call base formatter before your logic!
-            
+
             // format the log object to your custom string and return it.
-            
+
         }
 }
 ```
@@ -112,7 +112,7 @@ Now, to use this formatter, all you need to do is to declare it in your configur
 ```
 
 By default, Dj-logger comes with 2 kinds of formatter - Winston default formatter (to use it you need to remove the formatter option from configuration) and Splunk formatter (easy format for Splunk engine to read, you can use it by specifying 'splunk' in the formatter option, as I've done in the first example).
- 
+
 For more information about other configuration settings you can see [Winston's documentation](https://github.com/winstonjs/winston/blob/master/README.md).
 
 ###Using Winston Logger
@@ -123,7 +123,7 @@ For more information about Winston logger you can see [Winston's documentation](
 
 ###Transactions
 
-The main use of Dj-logger is for handling transactions that involve asynchronous actions. In this section, I'll explain how simple it is to use Dj-logger to solve this problem 
+The main use of Dj-logger is for handling transactions that involve asynchronous actions. In this section, I'll explain how simple it is to use Dj-logger to solve this problem
 
 ####Initialize Transactions
 
@@ -145,7 +145,16 @@ app.use(dj.startTransaction(logger,'YOUR-SYSYTEM-NAME','SYSTEM-COMPONENT', (req)
 The startTransaction method sets your first transactional parameters and returns a middleware that sets any request in its own namespace.
 The startTransaction parameters are: the transactional logger (each transactional logger should be initiate separately), your system name, the name of the system's component (e.g. "App Server", "Users Micro-Service", etc.), a callback that receives the request object and will execute before the call to next() method (optional).
 After executing this middleware, your logs will contain transactionId (generated automatically, or sets by the request's 'transaction-id' header), your system name, your current system component and requestUrl.
- 
+
+
+###Get Transaction ID
+
+Getting the transactionId is pretty easy. All you have to do is call the getTransactionId() function of the logger in the following matter:
+
+```javascript
+var transactionId = logger.getTransactionId();
+```
+
 ###Set Transactional Parameters
 
 There are two ways to set transactional parameters: single parameter and many parameters at once.
@@ -186,7 +195,7 @@ let x = logger.measure('myMeasure', f1, "f1 measure");
 logger.logMeasurements('my message');
 ```
 
-The code above will execute and measure the method f1. The first parameter is a name for the measurement, the second parameter is the method or promise to measure and the last parameter (optional) tells the logger to log the measurement right after f1 finished its executing with message "f1 measure". If the third parameter (which is a log message) exists, the measurements will be logged as info with this message and parameter myMeasureTime=x (x will be the number of milliseconds took to execute f1). 
+The code above will execute and measure the method f1. The first parameter is a name for the measurement, the second parameter is the method or promise to measure and the last parameter (optional) tells the logger to log the measurement right after f1 finished its executing with message "f1 measure". If the third parameter (which is a log message) exists, the measurements will be logged as info with this message and parameter myMeasureTime=x (x will be the number of milliseconds took to execute f1).
 If the third parameter is absent or set to false, all the measurements of the request will be stored until executing logMeasurements. logMeasurements will write info log with the measures results (all the measures in single log).
 When calling measure with function as the second parameter, measure's return value will be the input function's return value.
 
