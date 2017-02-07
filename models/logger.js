@@ -60,8 +60,8 @@ Object.setPrototypeOf(Logger.prototype, winston);
 
 function initTransports(config) {
     _.forOwn(config, (transportConfig, transportType) => {
-        let Transport = transports.get(transportType, transportConfig.module);
-        let options = initTransportOptions(transportConfig);
+        let Transport = this[_transports].get(transportType, transportConfig.module);
+        let options = initTransportOptions.call(this, transportConfig);
         winston.add(Transport, options);
     });
 }
@@ -71,7 +71,7 @@ function initTransportOptions(config) {
     if (options.formatter) {
         const Formatter = this[_formatters].get(config.formatter);
         let formatter = new Formatter(this[_parameters]);
-        options.formatter = formatter.format;
+        options.formatter = (log) => formatter.format(log);
     }
     return options;
 }
