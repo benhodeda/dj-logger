@@ -1,0 +1,8 @@
+{
+  "console": {
+    "level": "debug",
+    "colorize": true,
+    "timestamp": true,
+    "humanReadableUnhandledException": true
+  }
+}

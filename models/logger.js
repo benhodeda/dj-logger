@@ -6,6 +6,7 @@ const Measurements = require('./measurements');
 const defaults = require('./../configuration/defaults.config.json');
 const TransportFactory = require('./../factories/transport.factory.js');
 const FormatterFactory = require('./../factories/formatter.factory.js');
+const defaultLoggerConfig = require('../configuration/defaultLogger.config.json');
 
 const _transports = Symbol('transports');
 const _formatters = Symbol('formatters');
@@ -13,8 +14,8 @@ const _measurements = Symbol('measurements');
 const _parameters = Symbol('parameters');
 
 class Logger {
-    constructor(name, config, parameters = new Parameters(), measurements = new Measurements(),
-        formatterFactory = new FormatterFactory(), transportFactory = new TransportFactory()) {
+    constructor(name, config = defaultLoggerConfig, parameters = new Parameters(), measurements = new Measurements(),
+                formatterFactory = new FormatterFactory(), transportFactory = new TransportFactory()) {
         this[_parameters] = parameters;
         this[_measurements] = measurements;
         this[_formatters] = formatterFactory;

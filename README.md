@@ -44,11 +44,13 @@ There are several features you would like to be aware of:
 ```javascript
 var dj = require('dj-logger');
 var config = require('./logger.config'); //configuration for the logger
-var loggerFactory = new dj.LoggerFactory(config);
-var logger = loggerFactory.get('logger-name', config);
+var loggerFactory = dj.LoggerFactory.init(config);
+var logger = loggerFactory.get('logger-name');
 ```
 
 The LoggerFactory initialized with the loggers' configuration and can retrieve logger by its name using the `get` method.
+You must call the LoggerFactory `init` method once before using its `get` method with configurable logger name.
+Note: The LoggerFactory is static, so you CANNOT use its `init` more than a single time!
 The second overload of `get` method receives logger name (yours to choose) and a configuration for the logger.
 In case you've already created a logger with this name, the factory will return it (ignoring the new configuration), Otherwise it'll create a new logger and will set its settings according to the configuration object.
 (see [Setup Logger Configuration](#setup-logger-configuration) to understand the configuration of the logger)
@@ -133,7 +135,8 @@ By using Dj-logger you don't need to be aware of this mechanism (if you want to 
 ```javascript
 var dj = require('dj-logger');
 var config = require('./logger.config');
-var logger = dj.LoggerFactory.get('logger-name', config);
+dj.LoggerFactory.init(config);
+var logger = dj.LoggerFactory.get('logger-name');
 
 var app = express();
 
