@@ -95,7 +95,7 @@ function measureFunction(name, callback, immediateLog) {
 }
 
 function measurePromise(name, promise, immediateLog) {
-    return this[_measurements].measurePromise(name, promise).then(measurementResult => {
+    return this[_measurements].measurePromise(name, Promise.resolve(promise)).then(measurementResult => {
         writeMeasurement(name, measurementResult.time, immediateLog);
         return measurementResult.promiseResponse;
     });
