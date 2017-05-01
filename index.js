@@ -1,3 +1,5 @@
+//TODO: order by length, first bulk of node modules, second bulk realtive path modules
+
 require('continuation-local-storage').createNamespace('dj-logger');
 
 const Logger = require('./models/logger');
