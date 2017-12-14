@@ -26,10 +26,14 @@ class Logger {
         initTransports.call(this, config);
     }
 
+    getParam(key) {
+        return this[_parameters].get()[key];
+    }
+
     setParam(key, value) {
         this[_parameters].set(key, value);
     }
-
+    
     setManyParams(dataDictionary) {
         this[_parameters].setMany(dataDictionary);
     }
