@@ -85,6 +85,8 @@ function writeMeasurement(name, result, immediateLog) {
     if (immediateLog) {
         let param = {};
         param[key] = result;
+        param.name = key;
+        param.time = result;
         winston.info(immediateLog, param);
     }
 }
